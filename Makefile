@@ -87,11 +87,11 @@ docker-clean: ## Stop containers and remove images/volumes for this project only
 
 docker-run: ## Run Docker container directly (PORT=3001 to use different port)
 	@echo "$(BLUE)Running Docker container on port $${PORT:-3000}...$(NC)"
-	docker run -p $${PORT:-3000}:3000 --env-file .env.local price-matrix
+	docker run -p $${PORT:-3000}:3000 price-matrix
 
 docker-run-detached: ## Run Docker container in detached mode (PORT=3001 to use different port)
 	@echo "$(BLUE)Running Docker container in detached mode on port $${PORT:-3000}...$(NC)"
-	docker run -d -p $${PORT:-3000}:3000 --name price-matrix --env-file .env.local price-matrix
+	docker run -d -p $${PORT:-3000}:3000 --name price-matrix price-matrix
 
 docker-stop: ## Stop running Docker container
 	@echo "$(YELLOW)Stopping Docker container...$(NC)"

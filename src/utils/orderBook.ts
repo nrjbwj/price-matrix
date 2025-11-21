@@ -27,26 +27,28 @@ export function calculateDepthPercentage(
 
 /**
  * Get maximum cumulative size from processed order arrays
+ * Returns separate maxes for bids and asks so each side can be visualized independently
  */
 export function getMaxCumulative(
   bids: OrderWithCumulative[],
   asks: OrderWithCumulative[]
-): number {
+): { maxBid: number; maxAsk: number } {
   const maxBid = bids[bids.length - 1]?.cumulativeSize ?? 0;
   const maxAsk = asks[asks.length - 1]?.cumulativeSize ?? 0;
-  return Math.max(maxBid, maxAsk);
+  return { maxBid, maxAsk };
 }
 
 /**
  * Get maximum cumulative sum (USDT value) from processed order arrays
  * Used for depth visualization based on USDT value
+ * Returns separate maxes for bids and asks so each side can be visualized independently
  */
 export function getMaxCumulativeSum(
   bids: OrderWithCumulative[],
   asks: OrderWithCumulative[]
-): number {
+): { maxBidSum: number; maxAskSum: number } {
   const maxBidSum = bids[bids.length - 1]?.sum ?? 0;
   const maxAskSum = asks[asks.length - 1]?.sum ?? 0;
-  return Math.max(maxBidSum, maxAskSum);
+  return { maxBidSum, maxAskSum };
 }
 

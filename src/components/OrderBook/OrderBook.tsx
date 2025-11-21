@@ -28,7 +28,12 @@ export function OrderBook() {
     const maxCumulative = getMaxCumulative(bidsWithCumulative, asksWithCumulative);
     const maxCumulativeSum = getMaxCumulativeSum(bidsWithCumulative, asksWithCumulative);
 
-    return { bidsWithCumulative, asksWithCumulative, maxCumulative, maxCumulativeSum };
+    return { 
+      bidsWithCumulative, 
+      asksWithCumulative, 
+      maxCumulative, 
+      maxCumulativeSum 
+    };
   }, [sortedBids, sortedAsks]);
 
   return (
@@ -83,8 +88,8 @@ export function OrderBook() {
               <OrderBookColumn
                 orders={processedData.bidsWithCumulative}
                 type="bid"
-                maxCumulative={processedData.maxCumulative}
-                maxCumulativeSum={processedData.maxCumulativeSum}
+                maxCumulative={processedData.maxCumulative.maxBid}
+                maxCumulativeSum={processedData.maxCumulativeSum.maxBidSum}
                 selectedPair={selectedPair}
                 showBorderRight
               />
@@ -93,8 +98,8 @@ export function OrderBook() {
               <OrderBookColumn
                 orders={processedData.asksWithCumulative}
                 type="ask"
-                maxCumulative={processedData.maxCumulative}
-                maxCumulativeSum={processedData.maxCumulativeSum}
+                maxCumulative={processedData.maxCumulative.maxAsk}
+                maxCumulativeSum={processedData.maxCumulativeSum.maxAskSum}
                 selectedPair={selectedPair}
               />
             </Box>

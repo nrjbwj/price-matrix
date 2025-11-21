@@ -12,6 +12,8 @@ interface OrderBookRowProps {
   type: "bid" | "ask";
   maxCumulative: number;
   isBest?: boolean;
+  onClick?: () => void;
+  isSelected?: boolean;
 }
 
 export function OrderBookRow({
@@ -19,6 +21,8 @@ export function OrderBookRow({
   type,
   maxCumulative,
   isBest = false,
+  onClick,
+  isSelected = false,
 }: OrderBookRowProps) {
   const depthPercentage = useMemo(
     () => calculateDepthPercentage(order.cumulativeSize, maxCumulative),
@@ -27,6 +31,7 @@ export function OrderBookRow({
 
   return (
     <Box
+      onClick={onClick}
       sx={{
         position: "relative",
         height: 24,
@@ -36,6 +41,13 @@ export function OrderBookRow({
         paddingX: { xs: 1, md: 1.5 },
         fontSize: { xs: "0.75rem", md: "0.875rem" },
         gap: { xs: 0.5, md: 0 },
+        cursor: onClick ? "pointer" : "default",
+        backgroundColor: isSelected
+          ? (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(76, 175, 80, 0.2)"
+                : "rgba(76, 175, 80, 0.1)"
+          : "transparent",
         "&:hover": {
           backgroundColor: (theme) => getThemeHoverBackground(theme),
         },
@@ -48,7 +60,7 @@ export function OrderBookRow({
         sx={{
           position: "absolute",
           inset: 0,
-          transition: "width 0.3s ease",
+          transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
           backgroundColor:
             type === "bid"
               ? "rgba(76, 175, 80, 0.15)"

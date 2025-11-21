@@ -1,6 +1,7 @@
 "use client";
 
 import { Box } from "@mui/material";
+import { useState } from "react";
 import { OrderBookTableHeader } from "./OrderBookTableHeader";
 import { OrderBookRow } from "./OrderBookRow";
 import type { OrderWithCumulative } from "@/types";
@@ -20,6 +21,8 @@ export function OrderBookColumn({
   maxCumulative,
   showBorderRight = false,
 }: OrderBookColumnProps) {
+  const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
+
   return (
     <Box
       sx={{
@@ -40,6 +43,8 @@ export function OrderBookColumn({
             type={type}
             maxCumulative={maxCumulative}
             isBest={index === 0}
+            onClick={() => setSelectedPrice(selectedPrice === order.price ? null : order.price)}
+            isSelected={selectedPrice === order.price}
           />
         ))}
       </Box>

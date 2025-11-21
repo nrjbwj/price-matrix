@@ -11,6 +11,8 @@ export type Order = {
  */
 export type OrderWithCumulative = Order & {
   cumulativeSize: number;
+  total: number; // price * size
+  sum: number; // cumulative total in USDT
 };
 
 /**

@@ -1,7 +1,9 @@
+import { OrderBook } from "@/components/OrderBook/OrderBook";
+
 export default function Home() {
   return (
     <main>
-      {/* Order Book will be rendered here */}
+      <OrderBook />
     </main>
   );
 }

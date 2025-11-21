@@ -44,6 +44,7 @@ export async function fetchOrderBookDepth(
   limit: number = 20
 ): Promise<ParsedDepthData> {
   const url = getDepthEndpoint(symbol, limit);
+  console.log(`[API] Fetching order book for ${symbol} with depth ${limit}: ${url}`);
 
   try {
     const response = await fetch(url);

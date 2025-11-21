@@ -21,14 +21,20 @@ export const BINANCE_REST_API = "https://api.binance.com/api/v3";
 export const BINANCE_WS_API = "wss://stream.binance.com:9443/ws";
 
 /**
+ * Default order book depth (number of price levels)
+ */
+export const DEFAULT_DEPTH = 20;
+
+/**
  * Get REST API endpoint for order book depth
  */
-export function getDepthEndpoint(symbol: string, limit: number = 20): string {
+export function getDepthEndpoint(symbol: string, limit: number = DEFAULT_DEPTH): string {
   return `${BINANCE_REST_API}/depth?symbol=${symbol}&limit=${limit}`;
 }
 
 /**
  * Get WebSocket stream URL for order book depth
+ * Uses default depth of 20
  */
 export function getDepthWebSocketUrl(symbol: string): string {
   const lowerSymbol = symbol.toLowerCase();

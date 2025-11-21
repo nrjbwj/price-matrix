@@ -33,6 +33,8 @@ export function useOrderBookData(
           lastUpdateId: query.data.lastUpdateId,
         })
       );
+      // Clear error on successful data fetch
+      dispatch(setError(null));
     }
   }, [query.data, pair, dispatch]);
 

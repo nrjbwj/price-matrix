@@ -3,6 +3,7 @@
 import { Box, Typography } from "@mui/material";
 import { useMemo } from "react";
 import type { OrderWithCumulative } from "@/types";
+import { formatPrice, formatSize } from "@/utils/formatting";
 
 interface OrderBookRowProps {
   order: OrderWithCumulative;
@@ -69,7 +70,7 @@ export function OrderBookRow({
           fontSize: { xs: "0.75rem", md: "0.875rem" },
         }}
       >
-        {order.price.toFixed(2)}
+        {formatPrice(order.price)}
       </Typography>
       {/* Amount */}
       <Typography
@@ -83,7 +84,7 @@ export function OrderBookRow({
           fontSize: { xs: "0.75rem", md: "0.875rem" },
         }}
       >
-        {order.size.toFixed(6)}
+        {formatSize(order.size)}
       </Typography>
       {/* Total (cumulative size) */}
       <Typography
@@ -97,7 +98,7 @@ export function OrderBookRow({
           fontSize: { xs: "0.75rem", md: "0.875rem" },
         }}
       >
-        {order.cumulativeSize.toFixed(6)}
+        {formatSize(order.cumulativeSize)}
       </Typography>
     </Box>
   );

@@ -1,13 +1,15 @@
 "use client";
 
-import { Box, Typography, Alert, CircularProgress, Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import { useOrderBook } from "@/hooks/useOrderBook";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { OrderBookRow } from "./OrderBookRow";
 import { SpreadDisplay } from "./SpreadDisplay";
+import { OrderBookColumn } from "./OrderBookColumn";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { ErrorDisplay } from "@/components/ui/ErrorDisplay";
+import { EmptyState } from "./EmptyState";
 import { calculateCumulativeSizes } from "@/utils/calculations";
-import { DEFAULT_DEPTH } from "@/utils/constants";
 import { useMemo } from "react";
 
 export function OrderBook() {
@@ -50,25 +52,10 @@ export function OrderBook() {
         />
 
         {/* Error Display */}
-        {error && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
-            {error}
-          </Alert>
-        )}
+        {error && <ErrorDisplay error={error} />}
 
         {/* Loading State */}
-        {isLoading && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: 400,
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
+        {isLoading && <LoadingState />}
 
         {/* Order Book */}
         {!isLoading && (sortedBids.length > 0 || sortedAsks.length > 0) && (
@@ -109,184 +96,26 @@ export function OrderBook() {
               }}
             >
               {/* Bids Column */}
-              <Box
-                sx={{
-                  borderRight: {
-                    xs: "none",
-                    lg: (theme) =>
-                      `1px solid ${
-                        theme.palette.mode === "dark"
-                          ? "rgba(255, 255, 255, 0.1)"
-                          : "rgba(0, 0, 0, 0.1)"
-                      }`,
-                  },
-                }}
-              >
-                {/* Bids Header */}
-                <Box
-                  sx={{
-                    backgroundColor: "background.paper",
-                    padding: { xs: 1, md: 2 },
-                    borderBottom: (theme) =>
-                      `1px solid ${
-                        theme.palette.mode === "dark"
-                          ? "rgba(255, 255, 255, 0.1)"
-                          : "rgba(0, 0, 0, 0.1)"
-                      }`,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      paddingX: { xs: 1, md: 1.5 },
-                      gap: { xs: 0.5, md: 0 },
-                    }}
-                  >
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 70, md: 100 },
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Price (USDT)
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 60, md: 100 },
-                        textAlign: "right",
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Amount
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 60, md: 100 },
-                        textAlign: "right",
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Total
-                    </Typography>
-                  </Box>
-                </Box>
-                {/* Bids */}
-                <Box>
-                  {processedData.bidsWithCumulative.slice(0, DEFAULT_DEPTH).map((bid, index) => (
-                    <OrderBookRow
-                      key={`bid-${bid.price}-${index}`}
-                      order={bid}
-                      type="bid"
-                      maxCumulative={processedData.maxCumulative}
-                      isBest={index === 0}
-                    />
-                  ))}
-                </Box>
-              </Box>
+              <OrderBookColumn
+                orders={processedData.bidsWithCumulative}
+                type="bid"
+                maxCumulative={processedData.maxCumulative}
+                showBorderRight
+              />
 
               {/* Asks Column */}
-              <Box>
-                {/* Asks Header */}
-                <Box
-                  sx={{
-                    backgroundColor: "background.paper",
-                    padding: { xs: 1, md: 2 },
-                    borderBottom: (theme) =>
-                      `1px solid ${
-                        theme.palette.mode === "dark"
-                          ? "rgba(255, 255, 255, 0.1)"
-                          : "rgba(0, 0, 0, 0.1)"
-                      }`,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      paddingX: { xs: 1, md: 1.5 },
-                      gap: { xs: 0.5, md: 0 },
-                    }}
-                  >
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 70, md: 100 },
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Price (USDT)
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 60, md: 100 },
-                        textAlign: "right",
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Amount
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontWeight: 600,
-                        minWidth: { xs: 60, md: 100 },
-                        textAlign: "right",
-                        fontSize: { xs: "0.65rem", md: "0.75rem" },
-                        color: "text.primary",
-                      }}
-                    >
-                      Total
-                    </Typography>
-                  </Box>
-                </Box>
-                {/* Asks */}
-                <Box>
-                  {processedData.asksWithCumulative.slice(0, DEFAULT_DEPTH).map((ask, index) => (
-                    <OrderBookRow
-                      key={`ask-${ask.price}-${index}`}
-                      order={ask}
-                      type="ask"
-                      maxCumulative={processedData.maxCumulative}
-                      isBest={index === 0}
-                    />
-                  ))}
-                </Box>
-              </Box>
+              <OrderBookColumn
+                orders={processedData.asksWithCumulative}
+                type="ask"
+                maxCumulative={processedData.maxCumulative}
+              />
             </Box>
           </Paper>
         )}
 
         {/* Empty State */}
         {!isLoading && sortedBids.length === 0 && sortedAsks.length === 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: 400,
-            }}
-          >
-            <Typography variant="body1" color="text.secondary">
-              No order book data available
-            </Typography>
-          </Box>
+          <EmptyState />
         )}
 
         <Footer wsStatus={wsStatus} />

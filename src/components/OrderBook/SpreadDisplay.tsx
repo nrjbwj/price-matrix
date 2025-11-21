@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useAppSelector } from "@/store/hooks";
 import { useMemo } from "react";
 import { getBestBid, getBestAsk, calculateSpread, calculateSpreadPercentage } from "@/utils/calculations";
+import { SpreadItem } from "./SpreadItem";
 
 export function SpreadDisplay() {
   const { bids, asks } = useAppSelector((state) => state.orderBook);
@@ -42,62 +43,15 @@ export function SpreadDisplay() {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Box sx={{ textAlign: "center", flex: 1 }}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-            Best Bid
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 600,
-              color: "success.main",
-              fontFamily: "monospace",
-              fontSize: { xs: "0.875rem", md: "1.25rem" },
-            }}
-          >
-            {spreadInfo.bestBid.toFixed(2)}
-          </Typography>
-        </Box>
-        <Box sx={{ textAlign: "center", flex: 1, px: { xs: 1, md: 2 } }}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-            Spread
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 600,
-              color: "text.primary",
-              fontFamily: "monospace",
-              fontSize: { xs: "0.875rem", md: "1.25rem" },
-            }}
-          >
-            {spreadInfo.spread.toFixed(2)}
-            <Typography
-              component="span"
-              variant="caption"
-              color="text.secondary"
-              sx={{ ml: { xs: 0.5, md: 1 }, fontSize: { xs: "0.65rem", md: "0.75rem" } }}
-            >
-              ({spreadInfo.percentage.toFixed(3)}%)
-            </Typography>
-          </Typography>
-        </Box>
-        <Box sx={{ textAlign: "center", flex: 1 }}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5, fontSize: { xs: "0.65rem", md: "0.75rem" } }}>
-            Best Ask
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 600,
-              color: "error.main",
-              fontFamily: "monospace",
-              fontSize: { xs: "0.875rem", md: "1.25rem" },
-            }}
-          >
-            {spreadInfo.bestAsk.toFixed(2)}
-          </Typography>
-        </Box>
+        <SpreadItem label="Best Bid" value={spreadInfo.bestBid} color="success" />
+        <SpreadItem
+          label="Spread"
+          value={spreadInfo.spread}
+          color="default"
+          showPercentage
+          percentage={spreadInfo.percentage}
+        />
+        <SpreadItem label="Best Ask" value={spreadInfo.bestAsk} color="error" />
       </Box>
     </Box>
   );

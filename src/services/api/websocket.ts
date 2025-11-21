@@ -62,7 +62,7 @@ export class BinanceWebSocket {
         }
       };
 
-      this.ws.onerror = (error) => {
+      this.ws.onerror = () => {
         this.updateStatus("error");
         this.callbacks.onError?.(
           new Error("WebSocket connection error occurred")

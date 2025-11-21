@@ -3,7 +3,7 @@
 import { Box, Typography } from "@mui/material";
 import { TrendingUp } from "@mui/icons-material";
 import { PairSelector } from "./PairSelector";
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import type { TradingPair } from "@/types";
 
 interface HeaderProps {

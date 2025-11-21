@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setSelectedPair } from "@/store/slices/orderBookSlice";
 import { useOrderBookData } from "./useOrderBookData";

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Real-Time Order Book",
-  description: "Real-time cryptocurrency order book with live updates",
+  title: "PriceMatrix | Real-Time Order Book",
+  description: "Real-time cryptocurrency order book with live updates by PriceMatrix",
 };
 
 export default function RootLayout({

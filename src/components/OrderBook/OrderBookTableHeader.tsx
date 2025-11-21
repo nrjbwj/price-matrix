@@ -49,7 +49,7 @@ export function OrderBookTableHeader({ selectedPair }: OrderBookTableHeaderProps
             color: "text.primary",
           }}
         >
-          Amount ({instrumentName})
+          Size ({instrumentName})
         </Typography>
         <Typography
           variant="caption"
@@ -61,19 +61,7 @@ export function OrderBookTableHeader({ selectedPair }: OrderBookTableHeaderProps
             color: "text.primary",
           }}
         >
-          Total (USDT)
-        </Typography>
-        <Typography
-          variant="caption"
-          sx={{
-            fontWeight: 600,
-            minWidth: { xs: 60, md: 100 },
-            textAlign: "right",
-            fontSize: { xs: "0.6rem", md: "0.75rem" },
-            color: "text.primary",
-          }}
-        >
-          Sum (USDT)
+          Cumulative Size ({instrumentName})
         </Typography>
       </Box>
     </Box>

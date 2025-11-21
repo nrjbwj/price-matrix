@@ -10,31 +10,35 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorDisplay } from "@/components/ui/ErrorDisplay";
 import { EmptyState } from "./EmptyState";
 import { calculateCumulativeSizes } from "@/utils/calculations";
-import { sortBids, sortAsks, getMaxCumulative, getMaxCumulativeSum } from "@/utils/orderBook";
+import { getMaxCumulative } from "@/utils/orderBook";
 import { getThemeBorder } from "@/utils/theme";
+import { DEFAULT_DEPTH } from "@/utils/constants";
 import { useMemo } from "react";
 
 export function OrderBook() {
   const { selectedPair, wsStatus, changePair, bids, asks, error, isLoading } = useOrderBook();
 
-  // Sort bids descending and asks ascending
-  const sortedBids = useMemo(() => sortBids(bids), [bids]);
-  const sortedAsks = useMemo(() => sortAsks(asks), [asks]);
+  // Binance API returns sorted data:
+  // - Bids: descending (highest price first)
+  // - Asks: ascending (lowest price first)
+  // No need to sort again
 
   // Process data with cumulative sizes
   const processedData = useMemo(() => {
-    const bidsWithCumulative = calculateCumulativeSizes(sortedBids);
-    const asksWithCumulative = calculateCumulativeSizes(sortedAsks);
-    const maxCumulative = getMaxCumulative(bidsWithCumulative, asksWithCumulative);
-    const maxCumulativeSum = getMaxCumulativeSum(bidsWithCumulative, asksWithCumulative);
+    const bidsWithCumulative = calculateCumulativeSizes(bids);
+    const asksWithCumulative = calculateCumulativeSizes(asks);
+    
+    // Calculate max from displayed rows only (DEFAULT_DEPTH) for proper depth visualization
+    const displayedBids = bidsWithCumulative.slice(0, DEFAULT_DEPTH);
+    const displayedAsks = asksWithCumulative.slice(0, DEFAULT_DEPTH);
+    const maxCumulative = getMaxCumulative(displayedBids, displayedAsks);
 
     return { 
       bidsWithCumulative, 
       asksWithCumulative, 
-      maxCumulative, 
-      maxCumulativeSum 
+      maxCumulative
     };
-  }, [sortedBids, sortedAsks]);
+  }, [bids, asks]);
 
   return (
     <Box
@@ -57,7 +61,7 @@ export function OrderBook() {
         {isLoading && <LoadingState />}
 
         {/* Order Book */}
-        {!isLoading && (sortedBids.length > 0 || sortedAsks.length > 0) && (
+        {!isLoading && (bids.length > 0 || asks.length > 0) && (
           <Paper
             elevation={0}
             sx={{
@@ -71,7 +75,7 @@ export function OrderBook() {
             }}
           >
             {/* Spread Display at Top */}
-            <SpreadDisplay sortedBids={sortedBids} sortedAsks={sortedAsks} />
+            <SpreadDisplay sortedBids={bids} sortedAsks={asks} />
 
             {/* Side by Side Layout */}
             <Box
@@ -89,7 +93,6 @@ export function OrderBook() {
                 orders={processedData.bidsWithCumulative}
                 type="bid"
                 maxCumulative={processedData.maxCumulative.maxBid}
-                maxCumulativeSum={processedData.maxCumulativeSum.maxBidSum}
                 selectedPair={selectedPair}
                 showBorderRight
               />
@@ -99,7 +102,6 @@ export function OrderBook() {
                 orders={processedData.asksWithCumulative}
                 type="ask"
                 maxCumulative={processedData.maxCumulative.maxAsk}
-                maxCumulativeSum={processedData.maxCumulativeSum.maxAskSum}
                 selectedPair={selectedPair}
               />
             </Box>
@@ -107,7 +109,7 @@ export function OrderBook() {
         )}
 
         {/* Empty State */}
-        {!isLoading && sortedBids.length === 0 && sortedAsks.length === 0 && (
+        {!isLoading && bids.length === 0 && asks.length === 0 && (
           <EmptyState />
         )}
 

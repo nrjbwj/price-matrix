@@ -2,8 +2,15 @@ import type { Order, OrderWithCumulative } from "@/types";
 
 /**
  * Calculate cumulative sizes, totals, and sums for orders
- * For bids: cumulative from top (highest price)
- * For asks: cumulative from top (lowest price)
+ * 
+ * Cumulative size accumulates from top to bottom:
+ * - For bids: cumulative from top (highest price) downward
+ *   Example: Row 1 (top) = 5, Row 2 = 8, Row 3 = 10 (increasing downward)
+ * - For asks: cumulative from top (lowest price) downward
+ *   Example: Row 1 (top) = 2, Row 2 = 5, Row 3 = 9 (increasing downward)
+ * 
+ * This is standard order book behavior where cumulative size increases
+ * as you go down the order book (away from the best price).
  */
 export function calculateCumulativeSizes(orders: Order[]): OrderWithCumulative[] {
   let cumulativeSize = 0;

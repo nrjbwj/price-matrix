@@ -11,7 +11,6 @@ interface OrderBookRowProps {
   order: OrderWithCumulative;
   type: "bid" | "ask";
   maxCumulative: number;
-  maxCumulativeSum?: number; // Optional: for depth based on sum
   isBest?: boolean;
   onClick?: () => void;
   isSelected?: boolean;
@@ -21,18 +20,14 @@ export function OrderBookRow({
   order,
   type,
   maxCumulative,
-  maxCumulativeSum,
   isBest = false,
   onClick,
   isSelected = false,
 }: OrderBookRowProps) {
-  // Use sum for depth if provided, otherwise fall back to cumulativeSize
+  // Depth bars are proportional to cumulative size
   const depthPercentage = useMemo(() => {
-    if (maxCumulativeSum !== undefined) {
-      return calculateDepthPercentage(order.sum, maxCumulativeSum);
-    }
     return calculateDepthPercentage(order.cumulativeSize, maxCumulative);
-  }, [order.cumulativeSize, order.sum, maxCumulative, maxCumulativeSum]);
+  }, [order.cumulativeSize, maxCumulative]);
 
   return (
     <Box
@@ -71,8 +66,8 @@ export function OrderBookRow({
               ? "rgba(76, 175, 80, 0.15)"
               : "rgba(244, 67, 54, 0.15)",
           width: `${depthPercentage}%`,
-          right: type === "bid" ? 0 : "auto",
-          left: type === "ask" ? 0 : "auto",
+          left: type === "bid" ? 0 : "auto",
+          right: type === "ask" ? 0 : "auto",
           zIndex: 0,
         }}
       />
@@ -89,7 +84,7 @@ export function OrderBookRow({
       >
         {formatPrice(order.price)}
       </Typography>
-      {/* Amount */}
+      {/* Size */}
       <Typography
         sx={{
           position: "relative",
@@ -103,7 +98,7 @@ export function OrderBookRow({
       >
         {formatSize(order.size)}
       </Typography>
-      {/* Total (price * size for this row) */}
+      {/* Cumulative Size */}
       <Typography
         sx={{
           position: "relative",
@@ -115,21 +110,7 @@ export function OrderBookRow({
           fontSize: { xs: "0.7rem", md: "0.875rem" },
         }}
       >
-        {formatPrice(order.total)}
-      </Typography>
-      {/* Sum (cumulative total in USDT) */}
-      <Typography
-        sx={{
-          position: "relative",
-          zIndex: 1,
-          minWidth: { xs: 60, md: 100 },
-          textAlign: "right",
-          fontFamily: "monospace",
-          color: "text.secondary",
-          fontSize: { xs: "0.7rem", md: "0.875rem" },
-        }}
-      >
-        {formatPrice(order.sum)}
+        {formatSize(order.cumulativeSize)}
       </Typography>
     </Box>
   );

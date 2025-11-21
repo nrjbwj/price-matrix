@@ -2,6 +2,12 @@ import type { Order, OrderWithCumulative } from "@/types";
 
 /**
  * Sort bids in descending order (highest price first)
+ * 
+ * NOTE: Binance API already returns bids sorted in descending order.
+ * This function is kept for defensive purposes in case:
+ * - API behavior changes in the future
+ * - Data comes from a different source
+ * - We need to ensure sort order for safety
  */
 export function sortBids(bids: Order[]): Order[] {
   return [...bids].sort((a, b) => b.price - a.price);
@@ -9,6 +15,12 @@ export function sortBids(bids: Order[]): Order[] {
 
 /**
  * Sort asks in ascending order (lowest price first)
+ * 
+ * NOTE: Binance API already returns asks sorted in ascending order.
+ * This function is kept for defensive purposes in case:
+ * - API behavior changes in the future
+ * - Data comes from a different source
+ * - We need to ensure sort order for safety
  */
 export function sortAsks(asks: Order[]): Order[] {
   return [...asks].sort((a, b) => a.price - b.price);

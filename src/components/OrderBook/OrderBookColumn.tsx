@@ -12,7 +12,6 @@ interface OrderBookColumnProps {
   orders: OrderWithCumulative[];
   type: "bid" | "ask";
   maxCumulative: number;
-  maxCumulativeSum?: number;
   selectedPair: TradingPair;
   showBorderRight?: boolean;
 }
@@ -21,7 +20,6 @@ export function OrderBookColumn({
   orders,
   type,
   maxCumulative,
-  maxCumulativeSum,
   selectedPair,
   showBorderRight = false,
 }: OrderBookColumnProps) {
@@ -46,7 +44,6 @@ export function OrderBookColumn({
             order={order}
             type={type}
             maxCumulative={maxCumulative}
-            maxCumulativeSum={maxCumulativeSum}
             isBest={index === 0}
             onClick={() => setSelectedPrice(selectedPrice === order.price ? null : order.price)}
             isSelected={selectedPrice === order.price}

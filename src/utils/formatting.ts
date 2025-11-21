@@ -40,3 +40,10 @@ export function formatCumulativeSize(size: number): string {
   });
 }
 
+/**
+ * Format percentage with specified decimal places
+ */
+export function formatPercentage(percentage: number, decimals: number = 3): string {
+  return percentage.toFixed(decimals);
+}
+

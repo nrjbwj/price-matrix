@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
+import { getThemeBorder } from "@/utils/theme";
 
 export function OrderBookTableHeader() {
   return (
@@ -8,12 +9,7 @@ export function OrderBookTableHeader() {
       sx={{
         backgroundColor: "background.paper",
         padding: { xs: 1, md: 2 },
-        borderBottom: (theme) =>
-          `1px solid ${
-            theme.palette.mode === "dark"
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)"
-          }`,
+        borderBottom: (theme) => `1px solid ${getThemeBorder(theme)}`,
       }}
     >
       <Box

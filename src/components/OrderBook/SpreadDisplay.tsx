@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import { useAppSelector } from "@/store/hooks";
 import { useMemo } from "react";
 import { getBestBid, getBestAsk, calculateSpread, calculateSpreadPercentage } from "@/utils/calculations";
+import { getThemeBorder } from "@/utils/theme";
 import { SpreadItem } from "./SpreadItem";
 
 export function SpreadDisplay() {
@@ -28,18 +29,8 @@ export function SpreadDisplay() {
       sx={{
         backgroundColor: "background.paper",
         padding: { xs: 1.5, md: 2 },
-        borderTop: (theme) =>
-          `1px solid ${
-            theme.palette.mode === "dark"
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)"
-          }`,
-        borderBottom: (theme) =>
-          `1px solid ${
-            theme.palette.mode === "dark"
-              ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(0, 0, 0, 0.1)"
-          }`,
+        borderTop: (theme) => `1px solid ${getThemeBorder(theme)}`,
+        borderBottom: (theme) => `1px solid ${getThemeBorder(theme)}`,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

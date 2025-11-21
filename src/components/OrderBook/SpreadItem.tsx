@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import { formatPrice } from "@/utils/formatting";
+import { formatPrice, formatPercentage } from "@/utils/formatting";
 
 interface SpreadItemProps {
   label: string;
@@ -50,7 +50,7 @@ export function SpreadItem({
             color="text.secondary"
             sx={{ ml: { xs: 0.5, md: 1 }, fontSize: { xs: "0.65rem", md: "0.75rem" } }}
           >
-            ({percentage.toFixed(3)}%)
+            ({formatPercentage(percentage)}%)
           </Typography>
         )}
       </Typography>

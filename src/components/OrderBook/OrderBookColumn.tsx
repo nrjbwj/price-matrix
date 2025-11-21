@@ -5,6 +5,7 @@ import { OrderBookTableHeader } from "./OrderBookTableHeader";
 import { OrderBookRow } from "./OrderBookRow";
 import type { OrderWithCumulative } from "@/types";
 import { DEFAULT_DEPTH } from "@/utils/constants";
+import { getThemeBorder } from "@/utils/theme";
 
 interface OrderBookColumnProps {
   orders: OrderWithCumulative[];
@@ -25,12 +26,7 @@ export function OrderBookColumn({
         borderRight: showBorderRight
           ? {
               xs: "none",
-              lg: (theme) =>
-                `1px solid ${
-                  theme.palette.mode === "dark"
-                    ? "rgba(255, 255, 255, 0.1)"
-                    : "rgba(0, 0, 0, 0.1)"
-                }`,
+              lg: (theme) => `1px solid ${getThemeBorder(theme)}`,
             }
           : "none",
       }}

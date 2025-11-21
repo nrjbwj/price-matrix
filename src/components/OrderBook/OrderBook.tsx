@@ -10,29 +10,22 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorDisplay } from "@/components/ui/ErrorDisplay";
 import { EmptyState } from "./EmptyState";
 import { calculateCumulativeSizes } from "@/utils/calculations";
+import { sortBids, sortAsks, getMaxCumulative } from "@/utils/orderBook";
+import { getThemeBorder } from "@/utils/theme";
 import { useMemo } from "react";
 
 export function OrderBook() {
   const { selectedPair, wsStatus, changePair, bids, asks, error, isLoading } = useOrderBook();
 
   // Sort bids descending and asks ascending
-  const sortedBids = useMemo(() => {
-    return [...bids].sort((a, b) => b.price - a.price);
-  }, [bids]);
-
-  const sortedAsks = useMemo(() => {
-    return [...asks].sort((a, b) => a.price - b.price);
-  }, [asks]);
+  const sortedBids = useMemo(() => sortBids(bids), [bids]);
+  const sortedAsks = useMemo(() => sortAsks(asks), [asks]);
 
   // Process data with cumulative sizes
   const processedData = useMemo(() => {
     const bidsWithCumulative = calculateCumulativeSizes(sortedBids);
     const asksWithCumulative = calculateCumulativeSizes(sortedAsks);
-
-    const maxCumulative = Math.max(
-      bidsWithCumulative[bidsWithCumulative.length - 1]?.cumulativeSize ?? 0,
-      asksWithCumulative[asksWithCumulative.length - 1]?.cumulativeSize ?? 0
-    );
+    const maxCumulative = getMaxCumulative(bidsWithCumulative, asksWithCumulative);
 
     return { bidsWithCumulative, asksWithCumulative, maxCumulative };
   }, [sortedBids, sortedAsks]);
@@ -67,12 +60,7 @@ export function OrderBook() {
               backgroundColor: "background.paper",
               borderRadius: 1,
               overflow: "hidden",
-              border: (theme) =>
-                `1px solid ${
-                  theme.palette.mode === "dark"
-                    ? "rgba(255, 255, 255, 0.1)"
-                    : "rgba(0, 0, 0, 0.1)"
-                }`,
+              border: (theme) => `1px solid ${getThemeBorder(theme)}`,
               overflowX: "auto",
             }}
           >
@@ -87,12 +75,7 @@ export function OrderBook() {
                   xs: "1fr",
                   lg: "1fr 1fr",
                 },
-                borderTop: (theme) =>
-                  `1px solid ${
-                    theme.palette.mode === "dark"
-                      ? "rgba(255, 255, 255, 0.1)"
-                      : "rgba(0, 0, 0, 0.1)"
-                  }`,
+                borderTop: (theme) => `1px solid ${getThemeBorder(theme)}`,
               }}
             >
               {/* Bids Column */}

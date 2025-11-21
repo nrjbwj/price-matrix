@@ -4,6 +4,8 @@ import { Box, Typography } from "@mui/material";
 import { useMemo } from "react";
 import type { OrderWithCumulative } from "@/types";
 import { formatPrice, formatSize } from "@/utils/formatting";
+import { calculateDepthPercentage } from "@/utils/orderBook";
+import { getThemeHoverBackground } from "@/utils/theme";
 
 interface OrderBookRowProps {
   order: OrderWithCumulative;
@@ -18,9 +20,10 @@ export function OrderBookRow({
   maxCumulative,
   isBest = false,
 }: OrderBookRowProps) {
-  const depthPercentage = useMemo(() => {
-    return (order.cumulativeSize / maxCumulative) * 100;
-  }, [order.cumulativeSize, maxCumulative]);
+  const depthPercentage = useMemo(
+    () => calculateDepthPercentage(order.cumulativeSize, maxCumulative),
+    [order.cumulativeSize, maxCumulative]
+  );
 
   return (
     <Box
@@ -34,10 +37,7 @@ export function OrderBookRow({
         fontSize: { xs: "0.75rem", md: "0.875rem" },
         gap: { xs: 0.5, md: 0 },
         "&:hover": {
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.04)",
+          backgroundColor: (theme) => getThemeHoverBackground(theme),
         },
         transition: "background-color 0.2s",
         fontWeight: isBest ? 600 : 400,

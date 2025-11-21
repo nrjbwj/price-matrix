@@ -3,6 +3,7 @@
 import { Box, Typography } from "@mui/material";
 import { TrendingUp } from "@mui/icons-material";
 import { PairSelector } from "./PairSelector";
+import { ThemeToggle } from "./ThemeToggle";
 import type { TradingPair } from "@/types";
 
 interface HeaderProps {
@@ -70,7 +71,18 @@ export function Header({ selectedPair, onPairChange }: HeaderProps) {
           </Typography>
         </Box>
       </Box>
-      <PairSelector selectedPair={selectedPair} onPairChange={onPairChange} />
+      <Box sx={{ display: "flex", alignItems: "flex-end", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            paddingBottom: "4px",
+          }}
+        >
+          <ThemeToggle />
+        </Box>
+        <PairSelector selectedPair={selectedPair} onPairChange={onPairChange} />
+      </Box>
     </Box>
   );
 }

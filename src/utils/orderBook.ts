@@ -37,3 +37,16 @@ export function getMaxCumulative(
   return Math.max(maxBid, maxAsk);
 }
 
+/**
+ * Get maximum cumulative sum (USDT value) from processed order arrays
+ * Used for depth visualization based on USDT value
+ */
+export function getMaxCumulativeSum(
+  bids: OrderWithCumulative[],
+  asks: OrderWithCumulative[]
+): number {
+  const maxBidSum = bids[bids.length - 1]?.sum ?? 0;
+  const maxAskSum = asks[asks.length - 1]?.sum ?? 0;
+  return Math.max(maxBidSum, maxAskSum);
+}
+

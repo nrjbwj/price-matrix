@@ -11,6 +11,7 @@ interface OrderBookRowProps {
   order: OrderWithCumulative;
   type: "bid" | "ask";
   maxCumulative: number;
+  maxCumulativeSum?: number; // Optional: for depth based on sum
   isBest?: boolean;
   onClick?: () => void;
   isSelected?: boolean;
@@ -20,14 +21,18 @@ export function OrderBookRow({
   order,
   type,
   maxCumulative,
+  maxCumulativeSum,
   isBest = false,
   onClick,
   isSelected = false,
 }: OrderBookRowProps) {
-  const depthPercentage = useMemo(
-    () => calculateDepthPercentage(order.cumulativeSize, maxCumulative),
-    [order.cumulativeSize, maxCumulative]
-  );
+  // Use sum for depth if provided, otherwise fall back to cumulativeSize
+  const depthPercentage = useMemo(() => {
+    if (maxCumulativeSum !== undefined) {
+      return calculateDepthPercentage(order.sum, maxCumulativeSum);
+    }
+    return calculateDepthPercentage(order.cumulativeSize, maxCumulative);
+  }, [order.cumulativeSize, order.sum, maxCumulative, maxCumulativeSum]);
 
   return (
     <Box
@@ -38,9 +43,9 @@ export function OrderBookRow({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingX: { xs: 1, md: 1.5 },
-        fontSize: { xs: "0.75rem", md: "0.875rem" },
-        gap: { xs: 0.5, md: 0 },
+        paddingX: { xs: 0.75, md: 1.5 },
+        fontSize: { xs: "0.7rem", md: "0.875rem" },
+        gap: { xs: 0.25, md: 0 },
         cursor: onClick ? "pointer" : "default",
         backgroundColor: isSelected
           ? (theme) =>
@@ -76,10 +81,10 @@ export function OrderBookRow({
         sx={{
           position: "relative",
           zIndex: 1,
-          minWidth: { xs: 80, md: 100 },
+          minWidth: { xs: 70, md: 100 },
           fontFamily: "monospace",
           color: type === "bid" ? "success.main" : "error.main",
-          fontSize: { xs: "0.75rem", md: "0.875rem" },
+          fontSize: { xs: "0.7rem", md: "0.875rem" },
         }}
       >
         {formatPrice(order.price)}
@@ -89,28 +94,42 @@ export function OrderBookRow({
         sx={{
           position: "relative",
           zIndex: 1,
-          minWidth: { xs: 70, md: 100 },
+          minWidth: { xs: 60, md: 100 },
           textAlign: "right",
           fontFamily: "monospace",
           color: "text.primary",
-          fontSize: { xs: "0.75rem", md: "0.875rem" },
+          fontSize: { xs: "0.7rem", md: "0.875rem" },
         }}
       >
         {formatSize(order.size)}
       </Typography>
-      {/* Total (cumulative size) */}
+      {/* Total (price * size for this row) */}
       <Typography
         sx={{
           position: "relative",
           zIndex: 1,
-          minWidth: { xs: 70, md: 100 },
+          minWidth: { xs: 60, md: 100 },
           textAlign: "right",
           fontFamily: "monospace",
           color: "text.secondary",
-          fontSize: { xs: "0.75rem", md: "0.875rem" },
+          fontSize: { xs: "0.7rem", md: "0.875rem" },
         }}
       >
-        {formatSize(order.cumulativeSize)}
+        {formatPrice(order.total)}
+      </Typography>
+      {/* Sum (cumulative total in USDT) */}
+      <Typography
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          minWidth: { xs: 60, md: 100 },
+          textAlign: "right",
+          fontFamily: "monospace",
+          color: "text.secondary",
+          fontSize: { xs: "0.7rem", md: "0.875rem" },
+        }}
+      >
+        {formatPrice(order.sum)}
       </Typography>
     </Box>
   );

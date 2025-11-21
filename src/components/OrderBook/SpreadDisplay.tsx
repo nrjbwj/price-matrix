@@ -1,18 +1,21 @@
 "use client";
 
 import { Box } from "@mui/material";
-import { useAppSelector } from "@/store/hooks";
 import { useMemo } from "react";
 import { getBestBid, getBestAsk, calculateSpread, calculateSpreadPercentage } from "@/utils/calculations";
+import type { Order } from "@/types";
 import { getThemeBorder } from "@/utils/theme";
 import { SpreadItem } from "./SpreadItem";
 
-export function SpreadDisplay() {
-  const { bids, asks } = useAppSelector((state) => state.orderBook);
+interface SpreadDisplayProps {
+  sortedBids: Order[];
+  sortedAsks: Order[];
+}
 
+export function SpreadDisplay({ sortedBids, sortedAsks }: SpreadDisplayProps) {
   const spreadInfo = useMemo(() => {
-    const bestBid = getBestBid(bids);
-    const bestAsk = getBestAsk(asks);
+    const bestBid = getBestBid(sortedBids);
+    const bestAsk = getBestAsk(sortedAsks);
 
     if (bestBid === null || bestAsk === null) {
       return { spread: 0, percentage: 0, bestBid: 0, bestAsk: 0 };
@@ -22,7 +25,7 @@ export function SpreadDisplay() {
     const percentage = calculateSpreadPercentage(bestBid, bestAsk);
 
     return { spread, percentage, bestBid, bestAsk };
-  }, [bids, asks]);
+  }, [sortedBids, sortedAsks]);
 
   return (
     <Box

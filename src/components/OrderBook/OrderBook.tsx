@@ -10,7 +10,7 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorDisplay } from "@/components/ui/ErrorDisplay";
 import { EmptyState } from "./EmptyState";
 import { calculateCumulativeSizes } from "@/utils/calculations";
-import { sortBids, sortAsks, getMaxCumulative } from "@/utils/orderBook";
+import { sortBids, sortAsks, getMaxCumulative, getMaxCumulativeSum } from "@/utils/orderBook";
 import { getThemeBorder } from "@/utils/theme";
 import { useMemo } from "react";
 
@@ -26,8 +26,9 @@ export function OrderBook() {
     const bidsWithCumulative = calculateCumulativeSizes(sortedBids);
     const asksWithCumulative = calculateCumulativeSizes(sortedAsks);
     const maxCumulative = getMaxCumulative(bidsWithCumulative, asksWithCumulative);
+    const maxCumulativeSum = getMaxCumulativeSum(bidsWithCumulative, asksWithCumulative);
 
-    return { bidsWithCumulative, asksWithCumulative, maxCumulative };
+    return { bidsWithCumulative, asksWithCumulative, maxCumulative, maxCumulativeSum };
   }, [sortedBids, sortedAsks]);
 
   return (
@@ -65,7 +66,7 @@ export function OrderBook() {
             }}
           >
             {/* Spread Display at Top */}
-            <SpreadDisplay />
+            <SpreadDisplay sortedBids={sortedBids} sortedAsks={sortedAsks} />
 
             {/* Side by Side Layout */}
             <Box
@@ -83,6 +84,8 @@ export function OrderBook() {
                 orders={processedData.bidsWithCumulative}
                 type="bid"
                 maxCumulative={processedData.maxCumulative}
+                maxCumulativeSum={processedData.maxCumulativeSum}
+                selectedPair={selectedPair}
                 showBorderRight
               />
 
@@ -91,6 +94,8 @@ export function OrderBook() {
                 orders={processedData.asksWithCumulative}
                 type="ask"
                 maxCumulative={processedData.maxCumulative}
+                maxCumulativeSum={processedData.maxCumulativeSum}
+                selectedPair={selectedPair}
               />
             </Box>
           </Paper>

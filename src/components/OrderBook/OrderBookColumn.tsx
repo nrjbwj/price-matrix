@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import { OrderBookTableHeader } from "./OrderBookTableHeader";
 import { OrderBookRow } from "./OrderBookRow";
-import type { OrderWithCumulative } from "@/types";
+import type { OrderWithCumulative, TradingPair } from "@/types";
 import { DEFAULT_DEPTH } from "@/utils/constants";
 import { getThemeBorder } from "@/utils/theme";
 
@@ -12,6 +12,8 @@ interface OrderBookColumnProps {
   orders: OrderWithCumulative[];
   type: "bid" | "ask";
   maxCumulative: number;
+  maxCumulativeSum?: number;
+  selectedPair: TradingPair;
   showBorderRight?: boolean;
 }
 
@@ -19,6 +21,8 @@ export function OrderBookColumn({
   orders,
   type,
   maxCumulative,
+  maxCumulativeSum,
+  selectedPair,
   showBorderRight = false,
 }: OrderBookColumnProps) {
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
@@ -34,7 +38,7 @@ export function OrderBookColumn({
           : "none",
       }}
     >
-      <OrderBookTableHeader />
+      <OrderBookTableHeader selectedPair={selectedPair} />
       <Box>
         {orders.slice(0, DEFAULT_DEPTH).map((order, index) => (
           <OrderBookRow
@@ -42,6 +46,7 @@ export function OrderBookColumn({
             order={order}
             type={type}
             maxCumulative={maxCumulative}
+            maxCumulativeSum={maxCumulativeSum}
             isBest={index === 0}
             onClick={() => setSelectedPrice(selectedPrice === order.price ? null : order.price)}
             isSelected={selectedPrice === order.price}

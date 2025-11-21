@@ -41,3 +41,11 @@ export function getDepthWebSocketUrl(symbol: string): string {
   return `${BINANCE_WS_API}/${lowerSymbol}@depth20@100ms`;
 }
 
+/**
+ * Extract instrument name from trading pair
+ * Example: "BTCUSDT" -> "BTC", "ETHUSDT" -> "ETH"
+ */
+export function getInstrumentName(pair: TradingPair): string {
+  return pair.replace("USDT", "");
+}
+

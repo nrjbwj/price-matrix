@@ -1,9 +1,16 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
+import type { TradingPair } from "@/types";
+import { getInstrumentName } from "@/utils/constants";
 import { getThemeBorder } from "@/utils/theme";
 
-export function OrderBookTableHeader() {
+interface OrderBookTableHeaderProps {
+  selectedPair: TradingPair;
+}
+
+export function OrderBookTableHeader({ selectedPair }: OrderBookTableHeaderProps) {
+  const instrumentName = getInstrumentName(selectedPair);
   return (
     <Box
       sx={{
@@ -26,7 +33,7 @@ export function OrderBookTableHeader() {
           sx={{
             fontWeight: 600,
             minWidth: { xs: 70, md: 100 },
-            fontSize: { xs: "0.65rem", md: "0.75rem" },
+            fontSize: { xs: "0.6rem", md: "0.75rem" },
             color: "text.primary",
           }}
         >
@@ -38,11 +45,11 @@ export function OrderBookTableHeader() {
             fontWeight: 600,
             minWidth: { xs: 60, md: 100 },
             textAlign: "right",
-            fontSize: { xs: "0.65rem", md: "0.75rem" },
+            fontSize: { xs: "0.6rem", md: "0.75rem" },
             color: "text.primary",
           }}
         >
-          Amount
+          Amount ({instrumentName})
         </Typography>
         <Typography
           variant="caption"
@@ -50,11 +57,23 @@ export function OrderBookTableHeader() {
             fontWeight: 600,
             minWidth: { xs: 60, md: 100 },
             textAlign: "right",
-            fontSize: { xs: "0.65rem", md: "0.75rem" },
+            fontSize: { xs: "0.6rem", md: "0.75rem" },
             color: "text.primary",
           }}
         >
-          Total
+          Total (USDT)
+        </Typography>
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: 600,
+            minWidth: { xs: 60, md: 100 },
+            textAlign: "right",
+            fontSize: { xs: "0.6rem", md: "0.75rem" },
+            color: "text.primary",
+          }}
+        >
+          Sum (USDT)
         </Typography>
       </Box>
     </Box>

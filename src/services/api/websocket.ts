@@ -23,6 +23,7 @@ export class BinanceWebSocket {
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
   private reconnectTimer: NodeJS.Timeout | null = null;
+  private isIntentionallyDisconnected = false; // Flag to prevent reconnection on intentional disconnect
 
   constructor(symbol: string, callbacks: WebSocketCallbacks) {
     this.url = getDepthWebSocketUrl(symbol);
@@ -36,6 +37,9 @@ export class BinanceWebSocket {
     if (this.ws?.readyState === WebSocket.OPEN) {
       return;
     }
+
+    // Reset intentional disconnect flag when connecting
+    this.isIntentionallyDisconnected = false;
 
     this.updateStatus("connecting");
 
@@ -71,7 +75,10 @@ export class BinanceWebSocket {
 
       this.ws.onclose = () => {
         this.updateStatus("disconnected");
-        this.attemptReconnect();
+        // Only attempt reconnection if this wasn't an intentional disconnect
+        if (!this.isIntentionallyDisconnected) {
+          this.attemptReconnect();
+        }
       };
     } catch (error) {
       this.updateStatus("error");
@@ -89,13 +96,30 @@ export class BinanceWebSocket {
    * Disconnect from WebSocket stream
    */
   disconnect(): void {
+    // Set flag to prevent reconnection attempts
+    this.isIntentionallyDisconnected = true;
+
+    // Clear any pending reconnection attempts
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
     }
 
+    // Close WebSocket if it exists and is not already closed
     if (this.ws) {
-      this.ws.close();
+      // Remove event handlers to prevent reconnection
+      this.ws.onclose = null;
+      this.ws.onerror = null;
+      this.ws.onmessage = null;
+      this.ws.onopen = null;
+
+      // Close the connection
+      if (
+        this.ws.readyState === WebSocket.OPEN ||
+        this.ws.readyState === WebSocket.CONNECTING
+      ) {
+        this.ws.close();
+      }
       this.ws = null;
     }
 

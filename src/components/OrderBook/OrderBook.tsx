@@ -18,10 +18,9 @@ import { useMemo } from "react";
 export function OrderBook() {
   const { selectedPair, wsStatus, changePair, bids, asks, error, isLoading } = useOrderBook();
 
-  // Binance API returns sorted data:
+  // Data is sorted defensively in Redux slice:
   // - Bids: descending (highest price first)
   // - Asks: ascending (lowest price first)
-  // No need to sort again
 
   // Process data with cumulative sizes
   const processedData = useMemo(() => {
